@@ -17,17 +17,16 @@ public class Interview
 		return true;
 	}
 	
-//	public static boolean per(String a, String b)
-//	{
-//		if(a.length()!=b.length())
-//			return false;
-//		char[] aa = a.toCharArray();
-//		char[] bb = b.toCharArray();
-//		Arrays.sort(aa);
-//		Arrays.sort(bb);
-//		//return 
-//		
-//	}
+	public static boolean per(String a, String b)
+	{
+		if(a.length()!=b.length())
+			return false;
+		char[] aa = a.toCharArray();
+		char[] bb = b.toCharArray();
+		Arrays.sort(aa);
+		Arrays.sort(bb);
+		return aa.equals(bb);
+	}
 	
 	public static void main(String[] args) 
 	{
