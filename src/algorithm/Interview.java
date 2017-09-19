@@ -28,11 +28,6 @@ public class Interview
 		return aa.equals(bb);
 	}
 	
-	public static void donothing()
-	{
-		
-	}
-	
 	public static void main(String[] args) 
 	{
 
