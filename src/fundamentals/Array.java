@@ -1,10 +1,18 @@
 package fundamentals;
 import java.util.*;
+import java.util.logging.*;
+import java.util.regex.*;
+import java.io.*;
+import java.lang.reflect.*;
+
 
 public abstract class Array 
-{
-	private static int level;
-	
+{	
+	/**
+	 * Generate the binary correspondent to the integer.
+	 * @param input
+	 * @return The binary number corresponding to the given integer.
+	 */
 	public static long binaryGenerator(int input)
     {
     	long digits = 0;//The number of digits that the inputed decimal number has.
@@ -18,11 +26,15 @@ public abstract class Array
     		binary = binary + (long)(media1*Math.pow(10, digits));
     		digits++;//Add up the digits.
     	}
-    	
     	return binary;
     }
 	
-	public static int countEle(Object[][] input)//Count the number of elements in a 2D array.
+	/**
+	 * Count the number of elements in a 2D array.
+	 * @param input A 2D array to be counted.
+	 * @return The number of elements of the given 2D array.
+	 */
+	public static int countEle(Object[][] input)
 	{
 		int count = 0;
 		for(Object[] holder1: input)
@@ -30,9 +42,19 @@ public abstract class Array
 		return count;
 	}
 	
+	
+	/**
+	 * Print the given array of elements. If only one element is present, print the element without adding square brackets. If multiple elements are present, each element is printed and separated with a comma and a space, and the elements are surrounded by a pair of square brackets. When encountering a 1D or 2D array as one of the element, print the array as it would of be printed if isolated, and treat this array as a whole as one element of the entire input array. 
+	 * @param input The input array to be printed.
+	 */
 	@SafeVarargs
 	public static <T> void printArray(T... input)//Print a list in a line with space between each element.
 	{
+		if(input.length==0)
+		{
+			System.out.println();
+			return;
+		}
 		if(input instanceof Object[][])
 		{
 			System.out.print("[");
@@ -41,7 +63,7 @@ public abstract class Array
 				if(i==((Object[][])input).length-1)
 				{
 					helpArray(((Object[][])input)[i]);
-					System.out.print("] ");
+					System.out.println("] ");
 				}
 				else
 				{
@@ -51,6 +73,12 @@ public abstract class Array
 			}
 			return;
 		}
+		if(input.length==1)
+		{
+			System.out.println(input[0]);
+			return;
+		}
+		System.out.print("[");
 		for(T holder: input)
 		{
 			if(holder instanceof Object[][])
@@ -61,7 +89,12 @@ public abstract class Array
 					if(i==((Object[][])holder).length-1)
 					{
 						helpArray(((Object[][])holder)[i]);
-						System.out.print("] ");
+						if(holder.equals(input[input.length-1]))
+						{
+							System.out.println("]");
+							return;
+						}
+						System.out.print("], ");
 					}
 					else
 					{
@@ -74,14 +107,27 @@ public abstract class Array
 			if(holder instanceof Object[])
 			{
 				helpArray((Object[])holder);
-				System.out.print(" ");
+				if(holder.equals(input[input.length-1]))
+				{
+					System.out.println("]");
+					return;
+				}
+				System.out.print(", ");
 				continue;
 			}
-			System.out.print(holder+" ");
+			if(holder.equals(input[input.length-1]))
+			{
+				System.out.println(holder+"]");
+				return;
+			}
+			System.out.print(holder+", ");
 		}
-		System.out.println();
 	}
 	
+	/**
+	 * A helper method to printArray.
+	 * @param input The object array to be printed. 
+	 */
 	private static void helpArray(Object[] input)
 	{
 		System.out.print("[");
@@ -96,7 +142,35 @@ public abstract class Array
 		}	
 	}
 	
-	public static Integer[] wrap(int[] input)//Duplicate the 1D array using its wrapper class.
+	/**
+	 * Print a dashed line.
+	 */
+	public static void printDash()
+	{
+		for(int i=0; i<50; i++)
+			System.out.print("-");
+		printArray();
+	}
+	
+	/**
+	 * Offer the string of a dashed line.
+	 * @return the string of a dashed line.
+	 */
+	public static String dash()
+	{
+		StringBuilder builder = new StringBuilder();
+		for(int i=0; i<50; i++)
+			builder.append("-");
+		builder.append("\n");
+		return builder.toString();
+	}
+	
+	/**
+	 * Duplicate the 1D array using its wrapper class.
+	 * @param input The inputed integer array.
+	 * @return The Integer array of the wrapper class.
+	 */
+	public static Integer[] wrap(int[] input)
 	{
 		Integer[] output = new Integer[input.length];
 		for(int i=0; i<input.length; i++)
@@ -104,6 +178,11 @@ public abstract class Array
 		return output;	
 	}
 	
+	/**
+	 * Duplicate the 1D double array using its wrapper class.
+	 * @param input The inputed double array.
+	 * @return The Double array of the wrapper class.
+	 */
 	public static Double[] wrap(double[] input)//Duplicate the 1D array using its wrapper class.
 	{
 		Double[] output = new Double[input.length];
@@ -112,6 +191,11 @@ public abstract class Array
 		return output;
 	}
 	
+	/**
+	 * Duplicate the 1D char array using its wrapper class.
+	 * @param input The inputed char array.
+	 * @return The Character array of the wrapper class.
+	 */
 	public static Character[] wrap(char[] input)//Duplicate the 1D array using its wrapper class.
 	{
 		Character[] output = new Character[input.length];
@@ -120,6 +204,11 @@ public abstract class Array
 		return output;
 	}
 	
+	/**
+	 * Duplicate the 1D long array using its wrapper class.
+	 * @param input The inputed long array.
+	 * @return The Long array of the wrapper class.
+	 */
 	public static Long[] wrap(long[] input)
 	{
 		Long[] output = new Long[input.length];
@@ -128,6 +217,11 @@ public abstract class Array
 		return output;
 	}
 	
+	/**
+	 * Duplicate the 2D array using its wrapper class.
+	 * @param input The inputed integer array.
+	 * @return The Integer array of the wrapper class.
+	 */
 	public static Integer[][] wrap(int[][] input)//Duplicate the 2D array using its wrapper class.
 	{
 		Integer[][] output = new Integer[input.length][];
@@ -136,6 +230,11 @@ public abstract class Array
 		return output;
 	}
 	
+	/**
+	 * Duplicate the 2D array using its wrapper class.
+	 * @param input The inputed double array.
+	 * @return The Double array of the wrapper class.
+	 */
 	public static Double[][] wrap(double[][] input)//Duplicate the 2D array using its wrapper class.
 	{
 		Double[][] output = new Double[input.length][];
@@ -144,6 +243,11 @@ public abstract class Array
 		return output;
 	}
 	
+	/**
+	 * Duplicate the 2D array using its wrapper class.
+	 * @param input The inputed char array.
+	 * @return The Character array of the wrapper class.
+	 */
 	public static Character[][] wrap(char[][] input)//Duplicate the 2D array using its wrapper class.
 	{
 		Character[][] output = new Character[input.length][];
@@ -152,6 +256,11 @@ public abstract class Array
 		return output;
 	}
 	
+	/**
+	 * Duplicate the 2D array using its wrapper class.
+	 * @param input The inputed long array.
+	 * @return The Long array of the wrapper class.
+	 */
 	public static Long[][] wrap(long[][] input)//Duplicate the 2D array using its wrapper class.
 	{
 		Long[][] output = new Long[input.length][];
@@ -160,7 +269,25 @@ public abstract class Array
 		return output;
 	}
 		
-	public static Object[] merge(Object... input)//Merge the given objects into an array.
+	/**
+	 * Verify whether the content of an array composed of objects consist only of null references.
+	 * @param sub The subject array to be examined.
+	 * @return True if the array contains only null references, false otherwise.
+	 */
+	public static <T> boolean nullcheck(T[] sub)
+	{
+		for(int i=0; i<sub.length; i++)
+			if(sub[i]!=null)
+				return true;
+		return false;
+	}
+	
+	/**
+	 * Merge the given objects into an object array.
+	 * @param input A list of objects to be merged into an array.
+	 * @return The merged array of objects with objects references.
+	 */
+	public static Object[] merge(Object... input)
 	{
 		Object[] output = new Object[input.length];
 		for(int i=0; i<input.length; i++)
@@ -168,6 +295,11 @@ public abstract class Array
 		return output;
 	}
 	
+	/**
+	 * Merge the given object arrays into a 2D object array.
+	 * @param input A list of object arrays.
+	 * @return The merged 2D array of object arrays.
+	 */
 	public static Object[][] merge(Object[]... input)//Merge the given list of arrays into a 2D array.
 	{
 		Object[][] output = new Object[input.length][];
@@ -176,7 +308,12 @@ public abstract class Array
 		return output;
 	}
 	
-	public static int[] cast(Integer[] input)//Cast the 1D Integer[] into int[].
+	/**
+	 * Cast the Integer array of the wrapper class to int array.
+	 * @param input The Integer array to be down casted. 
+	 * @return An int array casted from the Integer array inputed.
+	 */
+	public static int[] cast(Integer[] input)
 	{
 		int[] output = new int[input.length];
 		for(int i=0; i<input.length; i++)
@@ -184,7 +321,12 @@ public abstract class Array
 		return output;
 	}
 	
-	public static double[] cast(Double[] input)//Cast the 1D Double[] into double[].
+	/**
+	 * Cast the Double array of wrapper class to double array.
+	 * @param input The Double array to be down casted.
+	 * @return A double array casted from the Double wrapper array. 
+	 */
+	public static double[] cast(Double[] input)
 	{
 		double[] output = new double[input.length];
 		for(int i=0; i<input.length; i++)
@@ -192,7 +334,12 @@ public abstract class Array
 		return output;
 	}
 	
-	public static char[] cast(Character[] input)//Cast the 1D Character[] into char[].
+	/**
+	 * Cast the Character array of wrapper class to char array.
+	 * @param input The Character array to be down casted.
+	 * @return A char array casted from the Character wrapper array. 
+	 */
+	public static char[] cast(Character[] input)
 	{
 		char[] output = new char[input.length];
 		for(int i=0; i<input.length; i++)
@@ -200,7 +347,12 @@ public abstract class Array
 		return output;
 	}
 	
-	public static long[] cast(Long[] input)//Cast the 1D Long[] into long[].
+	/**
+	 * Cast the Long array of wrapper class to long array.
+	 * @param input The Long array to be down casted.
+	 * @return A long array casted from the Long wrapper array. 
+	 */
+	public static long[] cast(Long[] input)
 	{
 		long[] output = new long[input.length];
 		for(int i=0; i<input.length; i++)
@@ -208,7 +360,12 @@ public abstract class Array
 		return output;
 	}
 	
-	public static Integer[] castInt(Object[] input)//Cast the valid 1D array of Object reference into Integer reference.
+	/**
+	 * Cast the valid 1D array of Object reference into Integer reference.
+	 * @param input The valid Object array whose elements are to be casted into Integers.
+	 * @return The 1D array of Integers casted from the Object reference. 
+	 */
+	public static Integer[] castInt(Object[] input)
 	{
 		Integer[] output = new Integer[input.length];
 		for(int i=0; i<input.length; i++)
@@ -216,7 +373,12 @@ public abstract class Array
 		return output;
 	}
 	
-	public static Double[] castDou(Object[] input)//Cast the valid 1D array of Object reference into Double reference.
+	/**
+	 * Cast the valid 1D array of Object reference into Double reference.
+	 * @param input The valid Object array whose elements are to be casted into Doubles.
+	 * @return The 1D array of Doubles casted from the Object reference.
+	 */
+	public static Double[] castDou(Object[] input)
 	{
 		Double[] output = new Double[input.length];
 		for(int i=0; i<input.length; i++)
@@ -224,6 +386,11 @@ public abstract class Array
 		return output;
 	}
 	
+	/**
+	 * Cast the valid 1D array of Object reference into Character reference.
+	 * @param input The valid Object array whose elements are to be casted into Characters.
+	 * @return The 1D array of Characters casted from the Object reference.
+	 */
 	public static Character[] castChar(Object[] input)//Cast the valid 1D array of Object reference into Character reference.
 	{
 		Character[] output = new Character[input.length];
@@ -232,6 +399,11 @@ public abstract class Array
 		return output;
 	}
 	
+	/**
+	 * Cast the valid 1D array of Object reference into Long reference.
+	 * @param input The valid Object array whose elements are to be casted into Longs.
+	 * @return The 1D array of Long casted from the Object reference.
+	 */
 	public static Long[] castLong(Object[] input)//Cast the valid 1D array of Object reference into Long reference.
 	{
 		Long[] output = new Long[input.length];
@@ -240,7 +412,12 @@ public abstract class Array
 		return output;
 	}
 	
-	public static Integer[][] castInt(Object[][] input)//Cast the valid 2D array of Object reference into Integer reference.
+	/**
+	 * Cast the valid 2D array of Object reference into Integer reference.
+	 * @param input The valid 2D Object array whose elements are to be casted into Integers.
+	 * @return The 2D array of Integers casted from the Object reference.
+	 */
+	public static Integer[][] castInt(Object[][] input)
 	{
 		Integer[][] output = new Integer[input.length][];
 		for(int i=0; i<input.length; i++)
@@ -248,7 +425,12 @@ public abstract class Array
 		return output;
 	}
 	
-	public static Double[][] castDou(Object[][] input)//Cast the valid 2D array of Object reference into Double reference.
+	/**
+	 * Cast the valid 2D array of Object reference into Double reference.
+	 * @param input The valid 2D Object array whose elements are to be casted into Doubles.
+	 * @return The 2D array of Doubles casted from the Object reference.
+	 */
+	public static Double[][] castDou(Object[][] input)
 	{
 		Double[][] output = new Double[input.length][];
 		for(int i=0; i<input.length; i++)
@@ -256,7 +438,12 @@ public abstract class Array
 		return output;
 	}
 	
-	public static Character[][] castChar(Object[][] input)//Cast the valid 2D array of Object reference into Character reference.
+	/**
+	 * Cast the valid 2D array of Object reference into Character reference.
+	 * @param input The valid 2D Object array whose elements are to be casted into Characters.
+	 * @return The 2D array of Characters casted from the Object reference.
+	 */
+	public static Character[][] castChar(Object[][] input)
 	{
 		Character[][] output = new Character[input.length][];
 		for(int i=0; i<input.length; i++)
@@ -264,7 +451,12 @@ public abstract class Array
 		return output;
 	}
 	
-	public static Long[][] castLong(Object[][] input)//Cast the valid 2D array of Object reference into Long reference.
+	/**
+	 * Cast the valid 2D array of Object reference into Long reference.
+	 * @param input The valid 2D Object array whose elements are to be casted into Longs.
+	 * @return The 2D array of Longs casted from the Object reference.
+	 */
+	public static Long[][] castLong(Object[][] input)
 	{
 		Long[][] output = new Long[input.length][];
 		for(int i=0; i<input.length; i++)
@@ -272,7 +464,11 @@ public abstract class Array
 		return output;
 	}
 	
-	public static Object[] reverse(Object[] input)//Reverse the given 1D array.
+	/**
+	 * Reverse the given 1D array.
+	 * @param input The 1D array to be reversed.
+	 */
+	public static void reverse(Object[] input)
 	{
 		for(int i=0; i<input.length/2; i++)
 		{
@@ -280,10 +476,13 @@ public abstract class Array
 			input[i] = input[input.length-1-i];
 			input[input.length-1-i] = temp;
 		}
-		return input;
 	}
 	
-	public static Object[][] reverse(Object[][] input)//Reverse the given 2D array.
+	/**
+	 * Reverse the valid given 2D array.
+	 * @param input The valid 2D array to be reversed.
+	 */
+	public static void reverse(Object[][] input)//Reverse the given 2D array.
 	{
 		int limit = countEle(input)/2;
 		int counter = 0;
@@ -299,15 +498,59 @@ public abstract class Array
 					break label;
 			}
 		}
-		return input;
 	}
 
-	public static <T extends Comparable<? super T>> int linearSearch(T[] input, T tar)
+	/**
+	 * Search for the desired item by linear search. 
+	 * @param input The array to be searched. 
+	 * @param tar The targeted element. 
+	 * @return the index of the element. -1 if not found in the given array. 
+	 */
+	public static <T> int linearSearch(T[] input, T tar)
 	{
 		for(int i=0; i<input.length; i++)
 			if(input[i].equals(tar))
 				return i;
 		return -1;
+	}
+	
+	/**
+	 * Search for the targeted item in a collection via linear search.
+	 * @param input the inputed collection to be searched.
+	 * @param tar The targeted item.
+	 * @return The index of the item targeted.
+	 */
+	public static <T> int linearSearch(Collection<T> input, T tar)
+	{
+		Iterator<T> pointer = input.iterator();
+		int counter = 0;
+		while(pointer.hasNext())
+			if(pointer.next().equals(tar))
+				return counter;
+			else 
+				counter++;
+		return -1;
+	}
+	
+	/**
+	 * Get an item in a collection based on its index. This method is designed for contingent use; an abuse of usage of it alone, or the coupling with linear searches may lead to unreasonable run time. 
+	 * @param input The collection to be fetched from according to the index.
+	 * @param index The index of the element to be fetched. 
+	 * @return
+	 */
+	public static <T> T get(Collection<T> input, int index)
+	{
+		Iterator<T> pointer = input.iterator();
+		int counter = 0;
+		while(pointer.hasNext())
+			if(counter<index)
+			{
+				pointer.next();
+				counter++;
+			}
+			else
+				return pointer.next();
+		throw new IndexOutOfBoundsException("The Given Index exceeds the Valid Maximum Index of the Collection.");
 	}
 	
 	public static <T extends Comparable<? super T>> Integer[] linearSearch(T[][] input, T tar)
@@ -334,20 +577,44 @@ public abstract class Array
 			return -1;
 		}
 		int mid = (ini+fin)/2;
+		if(input[mid].compareTo(tar)==0)
+			return mid;
 		if(input[mid].compareTo(tar)>0)
-			return binarySearching(input,tar,ini,mid);
+			return binarySearching(input,tar,ini,mid-1);
 		return binarySearching(input,tar,mid+1,fin);
 	}
 	
-	public static <T extends Comparable<? super T>> T[] sort(T[] data)//Sort the array in ascending order.
+	public static <T extends Comparable<? super T>> int binarySearching(List<T> input, T tar, int ini, int fin)
+	{
+		if(fin-ini==0)
+		{
+			if(input.get(ini).equals(tar))
+				return ini;
+			return -1;
+		}
+		int mid = (ini+fin)/2;
+		if(input.get(mid).compareTo(tar)==0)
+			return mid;
+		if(input.get(mid).compareTo(tar)>0)
+			return binarySearching(input,tar,ini,mid-1);
+		return binarySearching(input,tar,mid+1,fin);
+	}
+	
+	public static <T extends Comparable<? super T>> void sort(T[] data)//Sort the array in ascending order.
 	{
 		HeapSort.treeMax(data);
 		HeapSort.sortMin(data);
-		return data;
+	}
+	
+	public static <T extends Comparable<? super T>> void sortMax(T[] data)
+	{
+		sort(data);
+		reverse(data);
 	}
 	
 	private static class HeapSort
 	{
+		private static int level;
 		
 		public static <T extends Comparable<? super T>> void treeMax(T[] input)//Create a maximum binary tree.
 		{
@@ -485,6 +752,15 @@ public abstract class Array
 		return rand;
 	}
 	
+	public static List<Integer> randomIntL(Integer lowLim, Integer upLim, int size)//Generate an array of random integers with specific range and quantity.
+	{
+		List<Integer> rand = new LinkedList<Integer>();
+		Integer amplitude = upLim-lowLim;
+		for(int i=0; i<size; i++)
+			rand.add((int)(amplitude*Math.random()) + lowLim);
+		return rand;
+	}
+	
 	public static int[] randomint(int lowLim, int upLim, int size)//Generate an array of random integers with specific range and quantity.
 	{
 		int[] rand = new int[size];
@@ -544,6 +820,20 @@ public abstract class Array
 		return rand;
 	}
 	
+//	public static long hash(String arg)
+//	{
+//		int len = arg.length();
+//		double rand = Math.random();
+//		long output = (long)Math.pow(10, len+1);
+//		String copy = new String(arg);
+//		if(copy.toLowerCase().equals(arg))
+//		{
+//			output += len/10*(int)rand;
+//			//output += 
+//			
+//		}
+//	}
+	
 	/**
 	 * Verify if two arrays of the same reference type have the same elements in identical sequence.
 	 * @param a The first array.
@@ -595,7 +885,7 @@ public abstract class Array
 	@SafeVarargs
 	public static <T> List<T> list(T... input)
 	{
-		ArrayList<T> output = new ArrayList<T>();
+		ArrayList<T> output = new ArrayList<T>(input.length);
 		for(T holder: input)
 			output.add(holder);
 		return output;
@@ -642,7 +932,7 @@ public abstract class Array
 	 * @param sec The second collection.
 	 * @return True if both contain identical elements in identical sequence, false otherwise.
 	 */
-	public static <T> boolean compare(Collection<T> fir, Collection<T> sec)
+	public static <T> boolean verify(Collection<T> fir, Collection<T> sec)
 	{
 		if(fir.size()!=sec.size())
 			return false;
@@ -655,16 +945,31 @@ public abstract class Array
 	}
 	
 	/**
-	 * Compare the contents of two collections regardless of the the sequence they appear.
+	 * Compare the contents of two lists regardless of the the sequence they appear.
 	 * @param fir The first collection.
 	 * @param sec The second collection.
 	 * @return True if two collections share the same elements, false otherwise.
 	 */
-	public static <T extends Comparable<? super T>> boolean compareCon(List<T> fir, List<T> sec)
+	public static <T extends Comparable<? super T>> boolean verifyCon(List<T> fir, List<T> sec)
 	{
 		Collections.sort(fir);
 		Collections.sort(sec);
-		return compare(fir,sec);
+		return verify(fir,sec);
+	}
+	
+	/**
+	 * Compare the contents of two lists regardless of the the sequence they appear.
+	 * @param fir The first collection.
+	 * @param sec The second collection.
+	 * @return True if two collections share the same elements, false otherwise.
+	 */
+	public static <T extends Comparable<? super T>> boolean verifyCon(Set<T> fir, Set<T> sec)
+	{
+		List<T> firs = new ArrayList<T>(fir);
+		List<T> secd = new ArrayList<T>(sec);
+		Collections.sort(firs);
+		Collections.sort(secd);
+		return verify(firs,secd);
 	}
 	
 	/**
@@ -673,12 +978,12 @@ public abstract class Array
 	 * @param seq The key set.
 	 * @return An empty map if the given key set does not match the key set of the map, a new map containing the same entries rearranged in the sequence of the set given otherwise.
 	 */
-	public static <A,B> Map<A,B> regulate(Map<A,B> tar, Set<A> seq)
+	public static <A extends Comparable<? super A>,B> Map<A,B> regulate(Map<A,B> tar, Set<A> seq)
 	{
 		Map<A,B> output = new LinkedHashMap<A,B>();
-		if(!compare(tar.keySet(),seq))
+		if(!verifyCon(tar.keySet(),seq))
 		{
-			printArray("Error, Dismatching Key Sets");
+			printArray("Error, Mismatching Key Sets");
 			return output;
 		}
 		for(A holder: seq)
@@ -687,26 +992,62 @@ public abstract class Array
 	}
 	
 	/**
+	 * An inner helper comparator intended to compare the arguments based on their given values in a parallel map. By applying this inner class, erroneous computation may occur in the tree map if the put method is executed twice for the same key in its defining value.
+	 *
+	 * @param <T>
+	 */
+	private static class Freq<T> implements Comparator<T>
+	{
+		private Map<T,Integer> in;
+		
+		public Freq(Map<T,Integer> input)
+		{
+			in = input;
+		}
+		
+		/**
+		 * Compare the two arguments  based on their given value in the properly computed inner map.
+		 */
+		public int compare(T arg0, T arg1)
+		{
+			if(in.get(arg0)==null)
+				return arg1==null?0:1;
+			if(in.get(arg1)==null)
+				return arg0==null?0:-1;
+			if(in.get(arg0)==in.get(arg1))
+				return 0;
+			return in.get(arg0)>in.get(arg1)?-1:1;
+		}
+	}
+	
+	/**
+	 * Record the sorted frequency of the elements contained in the Collection.
+	 * @param input
+	 * @return The tree map of the sorted entries in terms of their frequencies.
+	 */
+	public static <T> TreeMap<T,Integer> freSort(Collection<T> input)
+	{
+		Map<T,Integer> parallel = new HashMap<T,Integer>();
+		TreeMap<T,Integer> output = new TreeMap<T,Integer>(new Freq<T>(parallel));
+		for(T holder: input)
+			parallel.put(holder, parallel.get(holder)==null?1:parallel.get(holder)+1);
+		for(T holder: parallel.keySet())
+			output.put(holder, parallel.get(holder));
+		return output;
+	}
+	
+	/**
 	 * Measure the frequency of the appearance of identical elements.
 	 * @param input
 	 * @return The map with the keys as elements in the collection and the values as integers of the counts of the occurrences.
 	 */
-	public static <T> Map<T,Integer> freq(Collection<T> input)
+	public static <T extends Comparable<? super T>> Map<T,Integer> freq(List<T> input)
 	{
-		Set<T> key = new TreeSet<T>();
+		Map<T,Integer> output = new HashMap<T,Integer>();
 		for(T holder: input)
-			key.add(holder);
-		Map<T,Integer> output = new LinkedHashMap<T,Integer>();
-		for(T holder1: key)
-		{
-			int counter = 0;
-			for(T holder2: input)
-				if(holder1.equals(holder2))
-					counter++;
-			output.put(holder1, counter);
-		}
-		return output;		
-	}
+			output.put(holder, output.get(holder)==null?1:output.get(holder)+1);
+		return output;
+	}		
 	
 	/**
 	 * Ascribe a list of the corresponding values base on the input list of the keys, and the given template as a map.
@@ -728,19 +1069,39 @@ public abstract class Array
 	 * @param two The value set.
 	 * @return If dismatching size, return empty map.
 	 */
-	public static <A,B> Map<A,B> initialize(Set<A> key, Set<B> values)
+	public static <A,B> Map<A,B> map(Set<A> key, Collection<B> values)
 	{
-		Map<A,B> output = new LinkedHashMap<A,B>();
+		Map<A,B> output = new HashMap<A,B>();
 		if(key.size()!=values.size())
-		{
-			printArray("Dismatching Size!");
-			return output;
-		}
+			throw new SizeMismatchException("Mismatching Sizes of Keys and Values");
 		Iterator<A> pointer1 = key.iterator();
 		Iterator<B> pointer2 = values.iterator();
 		while(pointer1.hasNext())
 			output.put(pointer1.next(), pointer2.next());
 		return output;
+	}
+	
+	
+	public static <A,B> Map<A,B> map(A[] key, B[] values)
+	{
+		Set<A> keySet = new LinkedHashSet<A>();
+		Collections.addAll(keySet,key);
+		if(keySet.size()!=values.length)
+			throw new SizeMismatchException("Mismatching Sizes of Keys and Values");
+		return map(keySet,list(values));
+	}
+	
+	public static Integer[] indexArr(int indexFin)
+	{
+		Integer[] output = new Integer[indexFin+1];
+		for(int i=0; i<=indexFin; i++)
+			output[i] = i;
+		return output;
+	}
+	
+	public static <T> Map<Integer,T> map(T[] input)
+	{
+		return map(indexArr(input.length-1),input);
 	}
 	
 	/**
@@ -810,6 +1171,164 @@ public abstract class Array
 		return output;
 	}
 	
+	
+	public static <T extends Comparable<? super T>> Set<T> sort(Set<T> input)
+	{
+		List<T> media = new LinkedList<T>(input);
+		Collections.sort(media);
+		return input = new LinkedHashSet<T>(media);
+	}
+	
+	public static <A extends Comparable<? super A>,B extends Comparable<? super B>> void sort(Map<A,B> input)
+	{
+		Set<A> keys = input.keySet();
+		sort(keys);
+		regulate(input,keys);
+	}
+	
+	
+	public static <A,B> Map<B,A> inverse(Map<A,B> input)
+	{
+		return map(new LinkedHashSet<B>(input.values()),input.keySet());
+	}
+	/**
+	 * The desired element is not present in the container or array being searched. 
+	 *
+	 */
+	public static class ElementNotExistException extends RuntimeException
+	{
+		private static final long serialVersionUID = 700;
+		
+		public ElementNotExistException()
+		{
+			super();
+		}
+		
+		public ElementNotExistException(String info)
+		{
+			super(info);
+		}
+		
+		public ElementNotExistException(Exception cause)
+		{
+			super(cause);
+		}
+	}
+	
+	/**
+	 * The two containers or arrays compared are of a size discrepancy and thereby cannot be compared.
+	 *
+	 */
+	public static class SizeMismatchException extends RuntimeException
+	{
+		private static final long serialVersionUID = 701;
+		
+		public SizeMismatchException()
+		{
+			super();
+		}
+		
+		public SizeMismatchException(String info)
+		{
+			super(info);
+		}
+		
+		public SizeMismatchException(Exception cause)
+		{
+			super(cause);
+		}
+	}
+	
+	public static class NoneSuperException extends RuntimeException
+	{
+		private static final long serialVersionUID = 702;
+		
+		public NoneSuperException()
+		{
+			super();
+		}
+		
+		public NoneSuperException(String info)
+		{
+			super(info);
+		}
+		
+		public NoneSuperException(Exception info)
+		{
+			super(info);
+		}
+	}
+	
+	public static void log(Exception ex)
+	{
+		Logger log = Logger.getLogger("Exception Logging");
+		StringWriter wri = new StringWriter();
+		ex.printStackTrace(new PrintWriter(wri));
+		log.severe(wri.toString());
+	}
+	
+	/**
+	 * Computed the frequencies of the objects contained in the collection by their type information. The effect of inheritance is included in the computation which does not include that of interfaces.
+	 * @param input The collection of objects to be computed of the type frequency.
+	 * @return A map with the types of classes as the keys and the corresponding frequencies as the values.
+	 */
+	public static <T> Map<Class<?>,Integer> typeFre(Collection<T> input)
+	{
+		return new HashMap<Class<?>,Integer>()
+		{
+			private static final long serialVersionUID = 101;
+			
+			{
+				for(T holder: input)
+					count(holder.getClass());
+			}
+			
+			private void count(Class<?> ref)
+			{
+				if(ref==Object.class)
+					return;
+				put(ref,!containsKey(ref)?1:get(ref)+1);
+				count(ref.getSuperclass());
+			}
+			
+			public String toString()
+			{
+				Pattern pat = Pattern.compile("\\s[^[A-Z]&&^,]*+([A-Z]\\w*=)");
+				Matcher mat = pat.matcher(super.toString());
+				StringBuffer buff = new StringBuffer();
+				while(mat.find())
+					mat.appendReplacement(buff,"$1");
+				mat.appendTail(buff);
+				return buff.toString();
+			}
+		};
+	}
+	
+	public static void classInfo(Class<?> ref)
+	{
+		printArray("Constructors");
+		Constructor<?>[] cons = ref.getConstructors();
+		for(Constructor<?> holder: cons)
+			printArray(holder.toString().replaceAll("\\w*+\\.",""));
+		printDash();
+		printArray("Fields");
+		Field[] fields = ref.getFields();
+		for(Field holder: fields)
+			printArray(holder.toString().replaceAll("\\w*+\\.",""));
+		printDash();
+//		printArray("Inner Classes");
+//		Class<?>[] classes = ref.getEnclosingClass();
+//		for(Class<?> holder: classes)
+//			printArray(holder.toString().replaceAll("\\w*+\\.",""));
+		printArray("Methods");
+		Method[] methods = ref.getMethods();
+		for(Method holder: methods)
+			printArray(holder.toString().replaceAll("\\w*+\\.",""));
+		
+	}
+
+	
+	
 	public static void main(String[] args) 
 	{		
 //		Integer[] tester = randomInt(-1000,1000,1000000);
@@ -820,9 +1339,17 @@ public abstract class Array
 //		Timer.timerStart();
 //		printArray(linearSearch(tester2,10));
 //		Timer.timerStop();
-		ArrayList<Integer> tester = new ArrayList<Integer>();
-		Collections.addAll(tester, 1,2);
-		printArray(settable(tester));
+//		ArrayList<Integer> tester = new ArrayList<Integer>();
+//		Collections.addAll(tester, 1,2);
+//		printArray(settable(tester));
+//		printDash();
+//		HashSet<Integer> see = new LinkedHashSet<Integer>();
+//		Collections.addAll(see,5,4,3,2,1);
+//		printArray(get(see,3));
+		List<Object> tester = new ArrayList<Object>();
+		Collections.addAll(tester, "A",5,2,"2",new Error("Error"),5.274);
+		String see = typeFre(tester).toString();
+		printArray(see);
 	}
 
 }
